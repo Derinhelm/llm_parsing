@@ -31,7 +31,8 @@ def compare_result(gold_res, pred_res):
     for s_i, gold_s in enumerate(gold_res):
         #assert all(line[0].isdigit() for line in pred_res[s_i].normal)
         gold_ids = Counter(t['id'] for t in gold_s)
-        pred_ids = Counter(line.id for line in pred_res[s_i].normal)
+        pred_ids = Counter(line.id
+            for line in pred_res[s_i].normal if not line.errors)
         if gold_ids != pred_ids:
             id_errors[s_i] = (gold_ids - pred_ids, pred_ids - gold_ids)
         
