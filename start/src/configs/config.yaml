@@ -1,0 +1,19 @@
+experiments:
+  - model: unsloth/Llama-3.3-70B-Instruct
+    result_name: llama70
+    treebanks:
+      - dataset: taiga
+        start: 1
+        finish: 11 # [start, finish)
+      - dataset: pud
+        start: 1
+        finish: 11
+      - dataset: gsd
+        start: 1
+        finish: 11
+      - dataset: poetry
+        start: 1
+        finish: 11
+      - dataset: syntagrus
+        start: 1
+        finish: 11
