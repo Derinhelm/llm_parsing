@@ -1,11 +1,11 @@
 from collections import Counter
 
-from metrics import compare_result, calculate_uas
+from metrics import compare_result, calculate_metrics
 from read_gold import read_gold_treebank
 from read_pred import LineResult, ParserSentResult, parse_results
 
 
-treebank_names = ['gsd', 'pud', 'taiga', 'poetry', 'syntagrus']
+treebank_names = ['gsd', 'pud']#, 'taiga', 'poetry', 'syntagrus']
 parser_names = [ 'qwen4', 'ruadapt4' ]
 prompt_range = range(1, 11)
 experiments = [(tr, prompt_i, parser) for tr in treebank_names
@@ -28,10 +28,10 @@ for tr, prompt_i, parser in experiments:
     #print(tr, prompt_i, parser, len(id_errors[(tr, prompt_i, parser)]),
     #          len(form_errors[(tr, prompt_i, parser)]))
 '''
-uas = {}
+uas, las = {}, {}
 for tr, prompt_i, parser in experiments:
-    uas[(tr, prompt_i, parser)] = \
-                calculate_uas(gold_treebanks[tr], pred_results[(tr, prompt_i, parser)])
+    uas[(tr, prompt_i, parser)], las[(tr, prompt_i, parser)] = \
+                calculate_metrics(gold_treebanks[tr], pred_results[(tr, prompt_i, parser)])
     #print(tr, prompt_i, parser, res[(tr, prompt_i, parser)].mean())
 
 '''
@@ -49,3 +49,9 @@ for tr in treebank_names:
         order_i = sorted(list(prompt_range),
                          key=lambda x: u_stat[x - 1])
         print(tr, parser, min(u_stat), max(u_stat), order_i)
+
+        l_stat = [las[(tr, prompt_i, parser)].mean().round(2)
+                  for prompt_i in prompt_range]
+        order_i = sorted(list(prompt_range),
+                         key=lambda x: l_stat[x - 1])
+        print(tr, parser, min(l_stat), max(l_stat), order_i)
