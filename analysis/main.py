@@ -13,12 +13,12 @@ experiments = [(tr, prompt_i, parser) for tr in treebank_names
                for parser in parser_names ]
 gold_treebanks = {}
 for tr in treebank_names:
-    gold_treebanks[tr] = read_gold_treebank(f'treebanks/ru_{tr}-ud-test.conllu')
+    gold_treebanks[tr] = read_gold_treebank(f'../treebanks/ru_{tr}-ud-test.conllu')
 
 pred_results = {}
 for tr, prompt_i, parser in experiments:
     pred_results[(tr, prompt_i, parser)] = \
-        parse_results(f'results/{parser}/{tr}/{parser}_{tr}_2_{prompt_i}.txt')
+        parse_results(f'../results/{parser}/{tr}/{parser}_{tr}_2_{prompt_i}.txt')
 
 '''id_errors = {}
 form_errors = {}
