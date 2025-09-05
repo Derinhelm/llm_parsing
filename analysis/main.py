@@ -1,8 +1,6 @@
-from collections import Counter
-
-from metrics import compare_result, calculate_metrics
+from metrics import  calculate_metrics
 from read_gold import read_gold_treebank
-from read_pred import LineResult, ParserSentResult, parse_results
+from read_pred import parse_results
 
 
 treebank_names = ['gsd', 'pud']#, 'taiga', 'poetry', 'syntagrus']
@@ -19,12 +17,9 @@ pred_results = {}
 for tr, prompt_i, parser in experiments:
     pred_results[(tr, prompt_i, parser)] = \
         parse_results(f'../results/{parser}/{tr}/{parser}_{tr}_2_{prompt_i}.txt')
-
-
-for tr, prompt_i, parser in experiments:
-    compare_result(gold_treebanks[tr], pred_results[(tr, prompt_i, parser)])
-    #print(tr, prompt_i, parser, len(id_errors[(tr, prompt_i, parser)]),
-    #          len(form_errors[(tr, prompt_i, parser)]))
+    assert len(pred_results[(tr, prompt_i, parser)]) == len(gold_treebanks[tr])
+    for s_i, gold_s in enumerate(gold_treebanks[tr]):
+        pred_results[(tr, prompt_i, parser)][s_i].create_errors(gold_s)
 
 uas, las = {}, {}
 for tr, prompt_i, parser in experiments:

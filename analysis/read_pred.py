@@ -1,3 +1,4 @@
+from collections import Counter
 import itertools
 import re
 import string
@@ -56,7 +57,26 @@ class ParserSentResult:
         self.errors = set() # TODO: получить errors из строк
         
     def __str__(self):
-        return ', '.join(str(t) for t in self.normal)        
+        return ', '.join(str(t) for t in self.normal)
+
+    def _compare(self, gold_data, pred_data):
+        gold = Counter(gold_data)
+        pred = Counter(pred_data)
+        if gold != pred:
+            return (tuple((gold - pred).elements()),
+                tuple((pred - gold).elements()))
+        return None
+    
+    def create_errors(self, gold_sent): # TODO: rename
+        id_errors = self._compare((t['id'] for t in gold_sent),
+            (line.id for line in self.normal if not line.errors))
+        if id_errors is not None:
+            self.errors.add(('Id set error', id_errors))
+
+        form_errors = self._compare((t['form'] for t in gold_sent),
+            (line.form for line in self.normal if not line.errors))
+        if form_errors is not None:
+            self.errors.add(('Form set error', id_errors))
 
 def parse_results(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
