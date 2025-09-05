@@ -48,19 +48,19 @@ def calculate_metrics(gold, pred):
     return uas_res, las_res
 
 def compare_result(gold_res, pred_res):
-    id_errors = {}
-    form_errors = {}
-
     for s_i, gold_s in enumerate(gold_res):
         #assert all(line[0].isdigit() for line in pred_res[s_i].normal)
         gold_ids = Counter(t['id'] for t in gold_s)
         pred_ids = Counter(line.id
             for line in pred_res[s_i].normal if not line.errors)
         if gold_ids != pred_ids:
-            id_errors[s_i] = (gold_ids - pred_ids, pred_ids - gold_ids)
+            pred_res[s_i].errors.add(("id error",
+                (tuple((gold_ids - pred_ids).elements()),
+                tuple((pred_ids - gold_ids).elements()))))
         
         gold_forms = Counter(t['form'] for t in gold_s)
         pred_forms = Counter(line.form for line in pred_res[s_i].normal)
         if gold_forms != pred_forms:
-            form_errors[s_i] = (gold_forms - pred_forms, pred_forms - gold_forms)
-    return id_errors, form_errors
+            pred_res[s_i].errors.add(("form error",
+                (tuple((gold_forms - pred_forms).elements()),
+                 tuple((pred_forms - gold_forms).elements()))))

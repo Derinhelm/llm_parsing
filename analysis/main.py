@@ -20,14 +20,12 @@ for tr, prompt_i, parser in experiments:
     pred_results[(tr, prompt_i, parser)] = \
         parse_results(f'../results/{parser}/{tr}/{parser}_{tr}_2_{prompt_i}.txt')
 
-'''id_errors = {}
-form_errors = {}
+
 for tr, prompt_i, parser in experiments:
-    id_errors[(tr, prompt_i, parser)], form_errors[(tr, prompt_i, parser)] = \
-            compare_result(gold_treebanks[tr], pred_results[(tr, prompt_i, parser)])
+    compare_result(gold_treebanks[tr], pred_results[(tr, prompt_i, parser)])
     #print(tr, prompt_i, parser, len(id_errors[(tr, prompt_i, parser)]),
     #          len(form_errors[(tr, prompt_i, parser)]))
-'''
+
 uas, las = {}, {}
 for tr, prompt_i, parser in experiments:
     uas[(tr, prompt_i, parser)], las[(tr, prompt_i, parser)] = \

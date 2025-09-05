@@ -53,6 +53,7 @@ class ParserSentResult:
         self.full = s.strip().split('\n')
         self.splitted = [ LineResult(line) for line in self.full ]
         self.normal = [ line for line in self.splitted if len(line.errors) == 0]
+        self.errors = set() # TODO: получить errors из строк
         
     def __str__(self):
         return ', '.join(str(t) for t in self.normal)        
