@@ -68,15 +68,15 @@ class ParserSentResult:
         return None
     
     def create_errors(self, gold_sent): # TODO: rename
-        id_errors = self._compare((t['id'] for t in gold_sent),
-            (line.id for line in self.normal if not line.errors))
-        if id_errors is not None:
-            self.errors.add(('Id set error', id_errors))
-
-        form_errors = self._compare((t['form'] for t in gold_sent),
-            (line.form for line in self.normal if not line.errors))
-        if form_errors is not None:
-            self.errors.add(('Form set error', id_errors))
+        for error_text, gold_f, pref_f in \
+            [('Id set error', lambda x: x['id'], lambda x: x.id),
+             ('Form set error', lambda x: x['form'], lambda x: x.form),
+             ('Parent_id set error', lambda x: x['parent_id'], lambda x: x.parent_id),
+             ('Relation set error', lambda x: x['relation'], lambda x: x.relation)]:
+            errors = self._compare((gold_f(t) for t in gold_sent),
+                (pref_f(line) for line in self.normal if not line.errors))
+            if errors is not None:
+                self.errors.add((error_text, errors))
 
 def parse_results(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
