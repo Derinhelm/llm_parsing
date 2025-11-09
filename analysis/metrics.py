@@ -27,9 +27,9 @@ def calc_sent_metrics(g, p):
                if(t['parent_id'] in p_dict) else (t['form'], None)) for t in p])
     uas = calc_f(uas_g_edges, uas_p_edges)
 
-    las_g_edges = Counter([((t['form'], g_dict[t['parent_id']], t['relation'])
+    las_g_edges = Counter([((t['form'], g_dict[t['parent_id']], t['relation'].split(":")[0])
                if(t['parent_id'] in g_dict) else (t['form'], None)) for t in g])
-    las_p_edges = Counter([((t['form'], p_dict[t['parent_id']], t['relation'])
+    las_p_edges = Counter([((t['form'], p_dict[t['parent_id']], t['relation'].split(":")[0])
                if(t['parent_id'] in p_dict) else (t['form'], None)) for t in p])
     las = calc_f(las_g_edges, las_p_edges)
     
