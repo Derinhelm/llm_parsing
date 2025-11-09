@@ -18,19 +18,19 @@ def calc_f(g_edges, p_edges):
 def calc_sent_metrics(g, p):
     g_dict = {t['id']: t['form'] for t in g}
     g_dict['0'] = 'root'
-    p_dict = {t.id: t.form for t in p.normal} # TODO: >
+    p_dict = {t['id']: t['form'] for t in p} # TODO: >
     p_dict['0'] = 'root' # TODO: проверить, что нет линии с id=0
 
     uas_g_edges = Counter([((t['form'], g_dict[t['parent_id']])
                if(t['parent_id'] in g_dict) else (t['form'], None)) for t in g])
-    uas_p_edges = Counter([((t.form, p_dict[t.parent_id])
-               if(t.parent_id in p_dict) else (t.form, None)) for t in p.normal])
+    uas_p_edges = Counter([((t['form'], p_dict[t['parent_id']])
+               if(t['parent_id'] in p_dict) else (t['form'], None)) for t in p])
     uas = calc_f(uas_g_edges, uas_p_edges)
 
     las_g_edges = Counter([((t['form'], g_dict[t['parent_id']], t['relation'])
                if(t['parent_id'] in g_dict) else (t['form'], None)) for t in g])
-    las_p_edges = Counter([((t.form, p_dict[t.parent_id], t.relation)
-               if(t.parent_id in p_dict) else (t.form, None)) for t in p.normal])
+    las_p_edges = Counter([((t['form'], p_dict[t['parent_id']], t['relation'])
+               if(t['parent_id'] in p_dict) else (t['form'], None)) for t in p])
     las = calc_f(las_g_edges, las_p_edges)
     
     extra_gold = list((las_g_edges - las_p_edges).elements())
@@ -55,7 +55,10 @@ def calculate_metrics(gold, pred):
                       "extra_parser": Counter(),
                       "both": Counter()}
     for i in range(len(gold)):
-        uas_i, las_i, relations_stat_i = calc_sent_metrics(gold[i], pred[i])
+        pred_dict = [{ "id": t.id, "form": t.form,
+                       "parent_id": t.parent_id, "relation": t.relation }
+                     for t in pred[i].normal ]
+        uas_i, las_i, relations_stat_i = calc_sent_metrics(gold[i], pred_dict)
         uas_list.append(uas_i)
         las_list.append(las_i)
         assert relation_stat.keys() == relations_stat_i.keys()
