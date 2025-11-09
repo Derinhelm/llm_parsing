@@ -77,6 +77,14 @@ class ParserSentResult:
                 (pref_f(line) for line in self.normal if not line.errors))
             if errors is not None:
                 self.errors.add((error_text, errors))
+        parser_id_counter = Counter(line.id for line in self.normal if not line.errors)
+        repeated_ids = { t_id: amount for t_id, amount in parser_id_counter.items()
+                         if amount > 1 }
+        # Id which are generated several times
+        if repeated_ids:
+            self.errors.add(("Repeated ids", tuple(repeated_ids.items())))
+        if "1" in repeated_ids:
+            self.errors.add(("Repeated id '1'", repeated_ids["1"]))
 
 def parse_results(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
