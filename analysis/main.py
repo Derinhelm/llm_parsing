@@ -23,7 +23,7 @@ for tr, prompt_i, parser in experiments:
 
 uas, las = {}, {}
 for tr, prompt_i, parser in experiments:
-    uas[(tr, prompt_i, parser)], las[(tr, prompt_i, parser)] = \
+    uas[(tr, prompt_i, parser)], las[(tr, prompt_i, parser)], _ = \
                 calculate_metrics(gold_treebanks[tr], pred_results[(tr, prompt_i, parser)])
     #print(tr, prompt_i, parser, res[(tr, prompt_i, parser)].mean())
 
