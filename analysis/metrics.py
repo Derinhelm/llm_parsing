@@ -15,7 +15,18 @@ def calc_f(g_edges, p_edges):
     f_score = (2 * precision * recall) / (precision + recall)
     return f_score
 
+def create_unique_list(t_list):
+    unique_t_list = []
+    t_ids = set()
+    for t in t_list[::-1]:
+        if t["id"] not in t_ids:
+            unique_t_list.append(t)
+            t_ids.add(t["id"])
+    return unique_t_list[::-1]
+    
 def calc_sent_metrics(g, p):
+    g = create_unique_list(g)
+    p = create_unique_list(p)
     g_dict = {t['id']: t['form'] for t in g}
     g_dict['0'] = 'root'
     p_dict = {t['id']: t['form'] for t in p} # TODO: >
